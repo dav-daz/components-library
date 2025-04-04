@@ -1,6 +1,6 @@
 {
   "name": "@dazdav/components-library",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,8 +23,9 @@
     "library-components": "./cli.js"
   },
   "files": [
-    "dist/",
-    "*.md"
-  ],
-  "main": "./src/index.js"
+    "src/",
+    "*.json",
+    "*.md",
+    "*.js"
+  ]
 }

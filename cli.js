@@ -1,17 +1,24 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { exec } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { exec } from 'child_process';
+
+// Obtenir le chemin actuel en utilisant import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Charger les composants depuis le fichier JSON
-const components = require('./composants.json');
+const componentsPath = path.resolve(__dirname, './components.json');
+const components = JSON.parse(fs.readFileSync(componentsPath, 'utf-8'));
 
 // Récupérer le nom du composant depuis les arguments de la commande
-const componentName = process.argv[2];
+const args = process.argv.slice(2);
+const componentName = args[1]; // Le nom du composant spécifié
 
 if (!componentName || !components[componentName]) {
-  console.error('Erreur : Veuillez spécifier un composant valide parmi :', Object.keys(components).join(', '));
+  console.error(`Erreur : Veuillez spécifier un composant valide parmi : ${Object.keys(components).join(', ')}`);
   process.exit(1);
 }
 
@@ -31,7 +38,7 @@ fs.copyFile(sourcePath, destPath, (err) => {
   console.log(`Le composant ${componentName} a été installé avec succès dans src/components/${componentName}.vue`);
 
   // Installer les dépendances nécessaires
-  if (dependencies.length > 0) {
+  if (dependencies && dependencies.length > 0) {
     console.log(`Installation des dépendances : ${dependencies.join(', ')}`);
     exec(`npm install ${dependencies.join(' ')}`, (err, stdout, stderr) => {
       if (err) {
