@@ -1,0 +1,10 @@
+{
+  "Slideshow": {
+    "path": "./src/components/Slideshow.vue",
+    "dependencies": ["swiper"]
+  },
+  "HelloWorld": {
+    "path": "./src/components/HelloWorld.vue",
+    "dependencies": []
+  }
+}
