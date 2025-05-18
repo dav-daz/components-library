@@ -2,9 +2,14 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const componentsDir = getComponentsPath();
 
 const args = process.argv.slice(2);
 const componentName = args[0];
@@ -24,8 +29,8 @@ if (!components[componentName]) {
 
 const { path: componentPath, dependencies } = components[componentName];
 const sourcePath = path.resolve(process.cwd(), componentPath);
-const componentsDir = getComponentsPath();
-const destPath = path.resolve(process.cwd(), `${componentsDir}/${componentName}.vue`);
+
+const destPath = path.resolve(__dirname, `${componentsDir}/${componentName}.vue`);
 
 // Créer le dossier components s'il n'existe pas
 fs.mkdirSync(path.dirname(destPath), { recursive: true });
