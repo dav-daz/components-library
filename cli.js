@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
+
+// Recréer __dirname dans un module ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const [command, ...args] = process.argv.slice(2);
 
