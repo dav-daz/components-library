@@ -1,6 +1,6 @@
 {
   "name": "@dazdav/components-library",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,9 +20,7 @@
     "vue-tsc": "^2.2.4"
   },
   "bin": {
-    "add": "./commands/add.js",
-    "list": "./commands/list.js",
-    "remove": "./commands/remove.js"
+    "components-library": "./cli.js"
   },
   "files": [
     "commands/",
