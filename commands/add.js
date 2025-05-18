@@ -28,9 +28,10 @@ if (!components[componentName]) {
 }
 
 const { path: componentPath, dependencies } = components[componentName];
-const sourcePath = path.resolve(process.cwd(), componentPath);
-
-const destPath = path.resolve(__dirname, `${componentsDir}/${componentName}.vue`);
+// Chemin source depuis le package components-library
+const sourcePath = path.resolve(__dirname, '..', componentPath);
+// Chemin destination dans le projet cible
+const destPath = path.resolve(process.cwd(), componentsDir, `${componentName}.vue`);
 
 // Créer le dossier components s'il n'existe pas
 fs.mkdirSync(path.dirname(destPath), { recursive: true });
