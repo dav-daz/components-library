@@ -5,21 +5,10 @@ import path from 'path';
 import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
+import { parseComponentArgs } from '../utils/args-parser.js';
 
-// Récupération des arguments de la ligne de commande
-const args = process.argv.slice(2);
-let componentName = null;
-let customPath = null;
-
-// Parcourir les arguments pour extraire le nom du composant et l'option path
-for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--path') {
-        customPath = args[i + 1];
-        i++; // Sauter le prochain argument car c'est la valeur de l'option
-    } else if (!componentName) {
-        componentName = args[i];
-    }
-}
+// Récupération et traitement des arguments
+const { componentName, customPath } = parseComponentArgs(process.argv.slice(2), 'add');
 
 // Vérification de la présence du nom du composant
 if (!componentName) {
