@@ -14,35 +14,49 @@ Le CLI permet de gérer les composants dans votre projet Vue.js ou Nuxt.js.
 
 ### Commandes disponibles
 
-#### Lister les composants
+#### Lister les composants disponibles
 Affiche tous les composants disponibles avec leurs dépendances.
 
 ```bash
 npx @dazdav/components-library list
 ```
 
-#### Ajouter un composant
-Copie un composant dans votre projet et installe ses dépendances.
+### Ajouter un composant
 
 ```bash
 npx @dazdav/components-library add <componentName>
 ```
 
-Exemple :
+Options :
+- `--path <customPath>` : Spécifie un chemin d'installation personnalisé pour le composant
+
+Exemples :
 ```bash
+# Installation dans le dossier par défaut
 npx @dazdav/components-library add Slideshow
+
+# Installation dans un dossier personnalisé
+npx @dazdav/components-library add Slideshow --path ./src/components/ui
+npx @dazdav/components-library add Slideshow --path src/components/ui
 ```
 
-#### Supprimer un composant
-Supprime un composant de votre projet et désinstalle ses dépendances si elles ne sont plus utilisées.
+### Supprimer un composant
 
 ```bash
 npx @dazdav/components-library remove <componentName>
 ```
 
-Exemple :
+Options :
+- `--path <customPath>` : Spécifie le chemin où le composant a été installé
+
+Exemples :
 ```bash
+# Suppression d'un composant du dossier par défaut
 npx @dazdav/components-library remove Slideshow
+
+# Suppression d'un composant d'un dossier personnalisé
+npx @dazdav/components-library remove Slideshow --path ./src/components/ui
+npx @dazdav/components-library remove Slideshow --path src/components/ui
 ```
 
 ## Structure des projets supportés
@@ -51,6 +65,8 @@ Le CLI détecte automatiquement le type de projet :
 
 - Pour un projet Vue.js, les composants sont installés dans `src/components/`
 - Pour un projet Nuxt.js, les composants sont installés dans `components/`
+
+Pour installer un composant dans un autre dossier, utilisez l'option `--path`.
 
 ## Composants disponibles
 
