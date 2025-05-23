@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { getDirPathFromUrl } from './paths.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = getDirPathFromUrl(import.meta.url);
 
 export function loadComponents() {
   const componentsPath = path.resolve(__dirname, '../components.json');

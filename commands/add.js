@@ -2,16 +2,15 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { getDirPathFromUrl } from '../utils/paths.js';
 import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
 import { parseComponentArgs } from '../utils/args-parser.js';
+import { findComponentInDir, askInstallPath, installRequiredComponent } from '../utils/component-checker.js';
 
 // Configuration du chemin pour ES modules
-// Nécessaire car __dirname n'est pas disponible par défaut dans les modules ES
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = getDirPathFromUrl(import.meta.url);
 
 // Récupération du chemin par défaut pour les composants
 // Ce chemin est déterminé en fonction du type de projet (Vue, Nuxt, etc.)
@@ -39,8 +38,39 @@ if (!components[componentName]) {
     process.exit(1);
 }
 
+// Vérification si le composant existe déjà
+const defaultSearchDir = path.resolve(process.cwd(), getComponentsPath());
+const componentExists = await findComponentInDir(componentName, defaultSearchDir);
+if (componentExists) {
+    console.error(`Info : Le composant "${componentName}" existe déjà dans le dossier ${path.relative(process.cwd(), defaultSearchDir)} ou ses sous-dossiers`);
+    process.exit(1);
+}
+
+// Vérification des composants requis avant l'installation
+const requiredComponent = components[componentName];
+if (requiredComponent.required_components?.length) {
+    const defaultSearchDir = path.resolve(process.cwd(), getComponentsPath());
+    
+    for (const requiredComp of requiredComponent.required_components) {
+        const exists = await findComponentInDir(requiredComp, defaultSearchDir);
+        
+        if (exists) {
+            console.log(`Info : Le composant requis "${requiredComp}" est déjà installé`);
+        } else {
+            console.log(`\nVérification des dépendances : ${requiredComp} est requis.`);
+            const customInstallPath = await askInstallPath(requiredComp);
+            
+            const success = await installRequiredComponent(requiredComp, components, customInstallPath);
+            if (!success) {
+                console.error(`Installation annulée : impossible d'installer le composant requis ${requiredComp}`);
+                process.exit(1);
+            }
+        }
+    }
+}
+
 // Extraction des informations du composant
-const { path: componentPath, dependencies } = components[componentName];
+const { path: componentPath, dependencies } = requiredComponent;
 
 // Construction des chemins source et destination
 // sourcePath : chemin vers le composant dans le package

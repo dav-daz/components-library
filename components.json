@@ -6,5 +6,10 @@
   "HelloWorld": {
     "path": "./src/components/HelloWorld.vue",
     "dependencies": []
+  },
+  "DummyComponent": {
+    "path": "./src/components/DummyComponent.vue",
+    "dependencies": [],
+    "required_components": ["HelloWorld"]
   }
 }
