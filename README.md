@@ -21,7 +21,7 @@ Affiche tous les composants disponibles avec leurs dépendances.
 npx @dazdav/components-library list
 ```
 
-### Ajouter un composant
+### Ajouter un composant ou un dossier
 
 ```bash
 npx @dazdav/components-library add <componentName>
@@ -38,9 +38,13 @@ npx @dazdav/components-library add Slideshow
 # Installation dans un dossier personnalisé
 npx @dazdav/components-library add Slideshow --path ./src/components/ui
 npx @dazdav/components-library add Slideshow --path src/components/ui
+
+# Installation d'un dossier de composants
+npx @dazdav/components-library add preview
+npx @dazdav/components-library add preview --path ./src/components/shared
 ```
 
-### Supprimer un composant
+### Supprimer un composant ou un dossier
 
 ```bash
 npx @dazdav/components-library remove <componentName>
@@ -57,6 +61,10 @@ npx @dazdav/components-library remove Slideshow
 # Suppression d'un composant d'un dossier personnalisé
 npx @dazdav/components-library remove Slideshow --path ./src/components/ui
 npx @dazdav/components-library remove Slideshow --path src/components/ui
+
+# Suppression d'un dossier de composants
+npx @dazdav/components-library remove preview
+npx @dazdav/components-library remove preview --path ./src/components/shared
 ```
 
 ## Structure des projets supportés
