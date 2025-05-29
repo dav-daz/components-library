@@ -11,5 +11,9 @@
     "path": "./src/components/DummyComponent.vue",
     "dependencies": [],
     "required_components": ["HelloWorld"]
+  },
+  "preview": {
+    "path": "./src/components/preview",
+    "dependencies": []
   }
 }

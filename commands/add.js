@@ -7,7 +7,7 @@ import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
 import { parseComponentArgs } from '../utils/args-parser.js';
-import { findComponentInDir, askInstallPath, installRequiredComponent } from '../utils/component-checker.js';
+import { findComponentInDir, askInstallPath, installRequiredComponent, isDirectory, copyDir } from '../utils/component-checker.js';
 
 // Configuration du chemin pour ES modules
 const __dirname = getDirPathFromUrl(import.meta.url);
@@ -72,6 +72,9 @@ if (requiredComponent.required_components?.length) {
 // Extraction des informations du composant
 const { path: componentPath, dependencies } = requiredComponent;
 
+// Vérifier si c'est un dossier ou un fichier
+const isDir = isDirectory(componentPath);
+
 // Construction des chemins source et destination
 // sourcePath : chemin vers le composant dans le package
 // destPath : chemin où le composant sera copié dans le projet cible
@@ -79,30 +82,42 @@ const sourcePath = path.resolve(__dirname, '..', componentPath);
 const targetDir = customPath 
     ? path.resolve(process.cwd(), customPath)
     : path.resolve(process.cwd(), componentsDir);
-const destPath = path.resolve(targetDir, `${componentName}.vue`);
+const destPath = isDir
+    ? path.resolve(targetDir, componentName)
+    : path.resolve(targetDir, `${componentName}.vue`);
 
 // Création du dossier de destination s'il n'existe pas
 fs.mkdirSync(path.dirname(destPath), { recursive: true });
 
-// Copie du fichier du composant
-fs.copyFile(sourcePath, destPath, (err) => {
-    if (err) {
-        console.error('Erreur lors de la copie du composant :', err);
+// Copie selon le type (dossier ou fichier)
+if (isDir) {
+    try {
+        await copyDir(sourcePath, destPath);
+        console.log(`Le dossier ${componentName} a été installé avec succès dans ${path.relative(process.cwd(), destPath)}`);
+    } catch (err) {
+        console.error('Erreur lors de la copie du dossier :', err);
         process.exit(1);
     }
-    // Affichage du succès avec le chemin relatif pour plus de clarté
-    console.log(`Le composant ${componentName} a été installé avec succès dans ${path.relative(process.cwd(), destPath)}`);
+} else {
+    fs.copyFile(sourcePath, destPath, (err) => {
+        if (err) {
+            console.error('Erreur lors de la copie du composant :', err);
+            process.exit(1);
+        }
+        // Affichage du succès avec le chemin relatif pour plus de clarté
+        console.log(`Le composant ${componentName} a été installé avec succès dans ${path.relative(process.cwd(), destPath)}`);
 
-    // Installation des dépendances si le composant en a
-    if (dependencies && dependencies.length > 0) {
-        console.log(`Installation des dépendances : ${dependencies.join(', ')}`);
-        exec(`npm install ${dependencies.join(' ')}`, (err, stdout, stderr) => {
-            if (err) {
-                console.error('Erreur lors de l\'installation des dépendances :', stderr);
-                process.exit(1);
-            }
-            console.log(stdout);
-            console.log('Dépendances installées avec succès.');
-        });
-    }
-});
+        // Installation des dépendances si le composant en a
+        if (dependencies && dependencies.length > 0) {
+            console.log(`Installation des dépendances : ${dependencies.join(', ')}`);
+            exec(`npm install ${dependencies.join(' ')}`, (err, stdout, stderr) => {
+                if (err) {
+                    console.error('Erreur lors de l\'installation des dépendances :', stderr);
+                    process.exit(1);
+                }
+                console.log(stdout);
+                console.log('Dépendances installées avec succès.');
+            });
+        }
+    });
+}

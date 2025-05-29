@@ -6,6 +6,7 @@ import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
 import { parseComponentArgs } from '../utils/args-parser.js';
+import { isDirectory, removeDependencies, removeDir } from '../utils/component-checker.js';
 
 // Récupération et traitement des arguments
 const { componentName, customPath } = parseComponentArgs(process.argv.slice(2), 'add');
@@ -18,12 +19,6 @@ if (!componentName) {
     process.exit(1);
 }
 
-function isDependencyUsedElsewhere(components, dependency, excludeComponent) {
-    return Object.entries(components).some(([name, info]) => {
-        return name !== excludeComponent && info.dependencies.includes(dependency);
-    });
-}
-
 const components = loadComponents();
 
 if (!components[componentName]) {
@@ -31,42 +26,40 @@ if (!components[componentName]) {
     process.exit(1);
 }
 
+// Vérifier si c'est un dossier ou un fichier
+const { path: componentPath, dependencies } = components[componentName];
+const isDir = isDirectory(componentPath);
+
 // Utiliser le chemin personnalisé ou le chemin par défaut
 const componentsDir = customPath || getComponentsPath();
 const targetDir = path.resolve(process.cwd(), componentsDir);
-const componentPath = path.resolve(targetDir, `${componentName}.vue`);
+const itemPath = isDir
+    ? path.resolve(targetDir, componentName)
+    : path.resolve(targetDir, `${componentName}.vue`);
 
 // Vérification de l'existence du fichier avant suppression
-if (!fs.existsSync(componentPath)) {
-    console.error(`Erreur : Le composant n'existe pas dans ${path.relative(process.cwd(), componentPath)}`);
+if (!fs.existsSync(itemPath)) {
+    console.error(`Erreur : ${isDir ? 'Le dossier' : 'Le composant'} n'existe pas dans ${path.relative(process.cwd(), itemPath)}`);
     process.exit(1);
 }
 
-const { dependencies } = components[componentName];
-
-fs.unlink(componentPath, (err) => {
-    if (err) {
-        console.error('Erreur lors de la suppression du composant :', err);
+// Suppression selon le type
+if (isDir) {
+    try {
+        await removeDir(itemPath);
+        console.log(`Le dossier ${componentName} a été supprimé avec succès de ${path.relative(process.cwd(), itemPath)}`);
+        await removeDependencies(dependencies, components, componentName);
+    } catch (err) {
+        console.error('Erreur lors de la suppression :', err);
         process.exit(1);
     }
-    
-    // Affichage du succès avec le chemin relatif pour plus de clarté
-    console.log(`Le composant ${componentName} a été supprimé avec succès de ${path.relative(process.cwd(), componentPath)}`);
-
-    // Gestion des dépendances
-    if (dependencies && dependencies.length > 0) {
-        const depsToRemove = dependencies.filter(dep => !isDependencyUsedElsewhere(components, dep, componentName));
-
-        if (depsToRemove.length > 0) {
-            console.log(`Suppression des dépendances non utilisées : ${depsToRemove.join(', ')}`);
-            exec(`npm uninstall ${depsToRemove.join(' ')}`, (err, stdout, stderr) => {
-                if (err) {
-                    console.error('Erreur lors de la désinstallation des dépendances :', stderr);
-                    process.exit(1);
-                }
-                console.log(stdout);
-                console.log('Dépendances désinstallées avec succès.');
-            });
-        }
+} else {
+    try {
+        await fs.promises.unlink(itemPath);
+        console.log(`Le composant ${componentName} a été supprimé avec succès de ${path.relative(process.cwd(), itemPath)}`);
+        await removeDependencies(dependencies, components, componentName);
+    } catch (err) {
+        console.error('Erreur lors de la suppression :', err);
+        process.exit(1);
     }
-});
+}
