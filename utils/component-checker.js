@@ -222,3 +222,26 @@ export async function removeDependencies(dependencies, components, componentName
     }
 }
 
+/**
+ * Installe les dépendances d'un composant
+ * @param {string[]} dependencies - Liste des dépendances à installer
+ * @returns {Promise<void>}
+ */
+export async function installDependencies(dependencies) {
+    if (!dependencies?.length) return;
+
+    console.log(`Installation des dépendances : ${dependencies.join(', ')}`);
+    return new Promise((resolve, reject) => {
+        exec(`npm install ${dependencies.join(' ')}`, (err, stdout, stderr) => {
+            if (err) {
+                console.error('Erreur lors de l\'installation des dépendances :', stderr);
+                reject(err);
+            } else {
+                console.log(stdout);
+                console.log('Dépendances installées avec succès.');
+                resolve();
+            }
+        });
+    });
+}
+

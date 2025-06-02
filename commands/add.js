@@ -3,11 +3,10 @@
 import fs from 'fs';
 import path from 'path';
 import { getDirPathFromUrl } from '../utils/paths.js';
-import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
 import { parseComponentArgs } from '../utils/args-parser.js';
-import { findComponentInDir, askInstallPath, installRequiredComponent, isDirectory, copyDir } from '../utils/component-checker.js';
+import { findComponentInDir, askInstallPath, installRequiredComponent, isDirectory, copyDir, installDependencies } from '../utils/component-checker.js';
 
 // Configuration du chemin pour ES modules
 const __dirname = getDirPathFromUrl(import.meta.url);
@@ -94,30 +93,18 @@ if (isDir) {
     try {
         await copyDir(sourcePath, destPath);
         console.log(`Le dossier ${componentName} a été installé avec succès dans ${path.relative(process.cwd(), destPath)}`);
+        await installDependencies(dependencies);
     } catch (err) {
         console.error('Erreur lors de la copie du dossier :', err);
         process.exit(1);
     }
 } else {
-    fs.copyFile(sourcePath, destPath, (err) => {
-        if (err) {
-            console.error('Erreur lors de la copie du composant :', err);
-            process.exit(1);
-        }
-        // Affichage du succès avec le chemin relatif pour plus de clarté
+    try {
+        await fs.promises.copyFile(sourcePath, destPath);
         console.log(`Le composant ${componentName} a été installé avec succès dans ${path.relative(process.cwd(), destPath)}`);
-
-        // Installation des dépendances si le composant en a
-        if (dependencies && dependencies.length > 0) {
-            console.log(`Installation des dépendances : ${dependencies.join(', ')}`);
-            exec(`npm install ${dependencies.join(' ')}`, (err, stdout, stderr) => {
-                if (err) {
-                    console.error('Erreur lors de l\'installation des dépendances :', stderr);
-                    process.exit(1);
-                }
-                console.log(stdout);
-                console.log('Dépendances installées avec succès.');
-            });
-        }
-    });
+        await installDependencies(dependencies);
+    } catch (err) {
+        console.error('Erreur lors de la copie du composant :', err);
+        process.exit(1);
+    }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@dazdav/components-library",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "publish": "npm publish --access public"
   },
   "dependencies": {
-    "swiper": "^11.2.6",
+    "swiper": "^11.2.8",
     "vue": "^3.5.13"
   },
   "devDependencies": {

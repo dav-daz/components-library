@@ -2,7 +2,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
 import { loadComponents } from '../utils/components.js';
 import { getComponentsPath } from '../utils/project-type.js';
 import { parseComponentArgs } from '../utils/args-parser.js';
