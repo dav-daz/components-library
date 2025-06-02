@@ -5,6 +5,17 @@ import { exec } from 'child_process';
 import { getComponentsPath } from './project-type.js';
 import { getDirPathFromUrl } from './paths.js';
 
+const __dirname = getDirPathFromUrl(import.meta.url);
+
+/**
+ * Charge la liste des composants depuis le fichier components.json
+ * @returns {Object} Liste des composants avec leurs configurations
+ */
+export function loadComponents() {
+  const componentsPath = path.resolve(__dirname, '../components.json');
+  return JSON.parse(fs.readFileSync(componentsPath, 'utf-8'));
+}
+
 /**
  * Recherche un composant dans un dossier et ses sous-dossiers
  * @param {string} componentName - Nom du composant à chercher
