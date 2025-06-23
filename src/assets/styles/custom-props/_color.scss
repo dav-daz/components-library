@@ -1,0 +1,24 @@
+////
+/// @file
+/// Project colors.
+////
+
+:root {
+  --c-white: #fff;
+  --c-black: #000;
+
+  // Abstracts
+  --c-primary: #41b883;
+  --c-secondary: #1a6e49;
+  --c-tertiary: #34495e;
+
+  // Backgrounds
+  --bg-highlighting: rgb(from var(--c-primary) r g b / 0.2);
+
+  // Specifics
+  --c-error: #ee060b;
+  --c-warning: #ff8c00;
+  --c-success: #00804b;
+  --c-disabled-light: #cfd5dc;
+  --c-disabled-dark: #5d6065;
+}

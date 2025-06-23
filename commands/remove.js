@@ -2,9 +2,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import { getComponentsPath } from '../utils/project-type.js';
-import { parseComponentArgs } from '../utils/args-parser.js';
-import { loadComponents, isDirectory, removeDependencies, removeDir } from '../utils/component-checker.js';
+import { getComponentsPath } from '#utils/project-type.js';
+import { parseComponentArgs } from '#utils/args-parser.js';
+import { loadComponents, isDirectory, removeDependencies, removeDir } from '#utils/component-checker.js';
 
 // Récupération et traitement des arguments
 const { componentName, customPath } = parseComponentArgs(process.argv.slice(2), 'add');

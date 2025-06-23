@@ -1,0 +1,18 @@
+////
+/// @file
+/// Project utilities for collapsible.
+////
+
+@mixin collapsible($selector: '.is-expanded > &') {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in;
+
+  #{$selector} {
+    max-height: 100rem;
+    opacity: 1;
+    visibility: visible;
+  }
+}

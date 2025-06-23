@@ -2,10 +2,10 @@
 
 import fs from 'fs';
 import path from 'path';
-import { getDirPathFromUrl } from '../utils/paths.js';
-import { getComponentsPath } from '../utils/project-type.js';
-import { parseComponentArgs } from '../utils/args-parser.js';
-import { loadComponents, findComponentInDir, askInstallPath, installRequiredComponent, isDirectory, copyDir, installDependencies } from '../utils/component-checker.js';
+import { getDirPathFromUrl } from '#utils/paths.js';
+import { getComponentsPath } from '#utils/project-type.js';
+import { parseComponentArgs } from '#utils/args-parser.js';
+import { loadComponents, findComponentInDir, askInstallPath, installRequiredComponent, isDirectory, copyDir, installDependencies } from '#utils/component-checker.js';
 
 // Configuration du chemin pour ES modules
 const __dirname = getDirPathFromUrl(import.meta.url);

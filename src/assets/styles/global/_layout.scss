@@ -1,0 +1,41 @@
+////
+/// @file
+/// Project classes for layouts.
+////
+@use '@helpers' as *;
+
+.layout {
+  &-wrapper {
+    @include layout;
+
+    @include respond-to('medium') {
+      padding-inline: var(--gutter-20);
+    }
+  }
+
+  &-content {
+    @include layout($w-content);
+  }
+}
+
+.column {
+  $max: 5;
+
+  @for $i from 1 through $max {
+    // Column utility classes
+    &-#{$i} {
+      @include layout-column($i);
+
+      // For each breakpoints
+      @each $name, $value in $breakpoints {
+        @include respond-to($name) {
+          $class: reduce-breakpoint-name($name);
+
+          &-#{$class} {
+            @include layout-nb-col($i);
+          }
+        }
+      }
+    }
+  }
+}

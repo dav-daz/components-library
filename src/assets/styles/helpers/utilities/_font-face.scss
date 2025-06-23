@@ -1,0 +1,39 @@
+////
+/// @file
+/// Project utilities to generate font face.
+////
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:string';
+
+/// @example
+///  @include font-face(MyFont, "../font/my-font", bold, italic, eot woff ttf svg);
+@mixin font-face($name, $path, $weight: normal, $style: normal, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+
+  // fixes for IE & SVG
+  $extmods: (
+    eot: '?#iefix',
+    svg: '#' + str-replace($name, ' ', '_')
+  );
+
+  // format details
+  $formats: (
+    eot: 'embedded-opentype',
+    otf: 'opentype',
+    ttf: 'truetype'
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map.has-key($extmods, $ext), $ext + map.get($extmods, $ext), $ext);
+    $format: if(map.has-key($formats, $ext), map.get($formats, $ext), $ext);
+    $src: list.append($src, url($path + '.' + $extmod) format(string.quote($format)), comma);
+  }
+
+  @font-face {
+    font-family: string.quote($name);
+    src: $src, $src;
+    font-style: $style;
+    font-weight: $weight;
+  }
+}

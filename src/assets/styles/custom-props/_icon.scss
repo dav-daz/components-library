@@ -1,0 +1,11 @@
+////
+/// @file
+/// Project icons.
+////
+@use '@helpers' as *;
+
+:root {
+  @each $key, $value in $icon-set {
+    --#{$key}: '#{$value}';
+  }
+}

@@ -1,0 +1,16 @@
+////
+/// @file
+/// Project transition variables.
+////
+
+// Individual properties.
+$t-duration-A: 0.25s;
+$t-duration-B: 0.4s;
+$t-easing-A: ease-in-out;
+
+// Variables to use.
+$t-default: all $t-duration-A $t-easing-A;
+$t-transform: transform $t-duration-A $t-easing-A;
+$t-color: color $t-duration-B $t-easing-A,
+background-color $t-duration-B $t-easing-A,
+border-color $t-duration-B $t-easing-A;

@@ -1,0 +1,72 @@
+////
+/// @file
+/// Project utilities for lists.
+////
+
+%list-display {
+  position: absolute;
+  right: 100%;
+  margin-right: 0.5em;
+  transform: translateY(-50%);
+}
+
+@mixin list-icon($icon: '', $color: currentColor, $top: 0.75em, $margin: 1.5em) {
+  & > * {
+    position: relative;
+    margin-left: $margin;
+
+    &::before {
+      @extend %icon;
+      @extend %list-display;
+
+      content: $icon;
+      top: $top;
+      color: $color;
+      @content;
+    }
+  }
+}
+
+@mixin list-bullet($color: currentColor, $size: 6px, $top: 0.6em, $margin: 1.5em, $round: true) {
+  & > * {
+    position: relative;
+    margin-left: $margin;
+
+    &::before {
+      @extend %list-display;
+
+      content: '';
+      top: $top;
+      width: $size;
+      height: $size;
+      background-color: $color;
+
+      @if $round {
+        border-radius: 50%;
+      }
+
+      @content;
+    }
+  }
+}
+
+@mixin list-num($color: inherit, $margin: 1.5em) {
+  counter-reset: i;
+
+  & > * {
+    position: relative;
+    margin-left: $margin;
+
+    &::before {
+      content: counter(i) '.';
+      counter-increment: i;
+      position: absolute;
+      top: 0;
+      right: 100%;
+      margin-right: 0.25em;
+      color: $color;
+
+      @content;
+    }
+  }
+}

@@ -2,7 +2,8 @@
 const valid_options = {
     'add': ['path'],
     'remove': ['path'],
-    'list': []
+    'list': [],
+    'install-assets': []
 };
 
 //Vérifie si une option est valide pour une commande donnée

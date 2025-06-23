@@ -1,0 +1,28 @@
+////
+/// @file
+/// Project utilities for layouts.
+////
+
+@use '@var' as *;
+
+@mixin layout($width: $w-site, $center: true) {
+  max-width: $width;
+  width: 100%;
+
+  @if $center {
+    margin-inline: auto;
+  }
+}
+
+@mixin layout-nb-col($columns: 2) {
+  grid-template-columns: repeat($columns, 1fr);
+}
+
+@mixin layout-column($columns: 2, $gap-col: var(--gutter-30), $gap-row: $gap-col) {
+  display: grid;
+  grid-gap: $gap-row $gap-col;
+
+  @include layout-nb-col($columns);
+
+  @content;
+}

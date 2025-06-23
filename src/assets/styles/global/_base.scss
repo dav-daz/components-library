@@ -1,0 +1,104 @@
+////
+/// @file
+/// All base styles.
+////
+@use '@helpers' as *;
+
+/// Import fonts
+// noinspection CssUnknownTarget
+// @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400..700;1,400..700&display=swap');
+
+/// Generate fonts
+@include font-face(icomoon, '@/assets/fonts/icomoon', normal, normal, eot woff ttf svg);
+
+::selection {
+  color: var(--c-white);
+  background-color: var(--c-black);
+}
+
+/// Better width/padding handling thanks to box-sizing.
+/// @see https://css-tricks.com/international-box-sizing-awareness-day/
+/// Uses inheritance so it can easily be overridden for specific components.
+/// @see https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/// Base font-size for html equates to 10px : allows using rem font-sizes everywhere by dividing / 10.
+/// Ex : 2rem will equate to 20px.
+html {
+  font-size: 0.625em;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--ff-primary);
+  font-size: var(--fs-medium);
+  color: var(--c-black);
+  background-color: var(--c-white);
+  -webkit-font-smoothing: antialiased; // for Mac : to handle fonts which seem too bold
+}
+
+html,
+body {
+  @media print {
+    overflow: inherit;
+  }
+}
+
+// ---------- Texts ----------
+@for $i from 1 through 5 {
+  $heading: h#{$i};
+
+  #{$heading} {
+    margin: 0;
+    font-size: var(--fs-#{$heading});
+    font-weight: 700;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+// ---------- Lists ----------
+ul,
+ol,
+li {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+// ---------- Images ----------
+figure {
+  margin: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  flex: none; // For ie 11
+}
+
+// ---------- Links ----------
+a {
+  color: inherit;
+  word-break: break-word;
+  text-decoration: none;
+  transition: $t-color;
+}
+
+// ---------- Elements to fit on one page ----------
+img,
+tr {
+  @media print {
+    page-break-inside: avoid;
+  }
+}

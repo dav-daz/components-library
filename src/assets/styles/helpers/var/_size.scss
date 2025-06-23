@@ -1,0 +1,18 @@
+////
+/// @file
+/// Project size variables.
+////
+
+/// Screen sizes (for media queries).
+$screens: (
+  xs: 520px,
+  small: 720px,
+  medium: 1024px,
+  large: 1440px,
+  xl: 1920px,
+);
+
+/// Layout sizes.
+$w-site: 144rem;
+$w-content: 110rem;
+$w-content-small: 87rem;

@@ -1,0 +1,29 @@
+////
+/// @file
+/// Project fonts (sizes & families).
+////
+@use '@helpers' as *;
+
+:root {
+  // Font families
+  --ff-primary: Ubuntu, sans-serif;
+
+  // Font sizes
+  --fs-h1: 3.2rem;
+  --fs-h2: 2.8rem;
+  --fs-h3: 2.6rem;
+  --fs-h4: 2.5rem;
+  --fs-h5: 2.4rem;
+  --fs-large: 2rem;
+  --fs-medium: 1.5rem;
+  --fs-small: 1.2rem;
+
+  @include respond-to('medium up') {
+    --fs-h1: 5rem;
+    --fs-h2: 3.4rem;
+    --fs-h3: 2.9rem;
+    --fs-h4: 2.7rem;
+    --fs-medium: 1.7rem;
+    --fs-small: 1.3rem;
+  }
+}

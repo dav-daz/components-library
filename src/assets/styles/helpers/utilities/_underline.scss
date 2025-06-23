@@ -1,0 +1,133 @@
+////
+/// @file
+/// Generate custom animated underline effect
+/// @param {string}  $from              - The start position [left|right|center].
+/// @param {string}  $color             - The color in hover state.
+/// @param {number}  $height            - The height of underline [px|em|rem|%].
+/// @param {boolean} $on-hover          - To trigger effect on hover [true|false].
+/// @param {boolean} $change-text-color - To change text color on hover [true|false].
+/// @param {number } $y                 - To background-position-y.
+/// @param {map}     $icon              - To set icon parameters [true|map].
+/// @examples
+///   a {
+///     @include underline(center, var(--c-primary-b), 3px, false, false);
+///   }
+///   .icon {
+///     Set $icon to true to use default parameters :
+///     @include underline($icon: true);
+///     Or redefine some parameters if necessary :
+///     @include underline(right, var(--c-primary-a), $icon: ('size': 7rem, 'top': 4px));
+///   }
+@use 'sass:list';
+@use 'sass:map';
+@use '@var' as *;
+
+// stylelint-disable-next-line max-line-length
+@mixin underline($from: left, $color: currentColor, $height: 0.1rem, $on-hover: false, $change-text-color: true, $y: 100%, $icon: null) {
+  $x: 0%;
+  $bg-width: 100%;
+
+  @if $from == right {
+    $x: 100%;
+  } @else if $from == center {
+    $x: 50%;
+  }
+
+  background-image: linear-gradient($color, $color);
+  background-repeat: no-repeat;
+  background-position-x: $x;
+  background-position-y: $y;
+  background-size: if($on-hover, 0, $bg-width) $height;
+  text-decoration: none;
+  transition: $t-default;
+
+  &:hover,
+  &:focus {
+    background-size: if($on-hover, $bg-width, 0) $height;
+
+    @if $change-text-color {
+      color: $color;
+    }
+
+    @content;
+  }
+
+  // Specific behavior for inline icons (before and/or after text)
+  @if $icon {
+    $i-default-params: ('size': var(--fs-medium), 'margin': var(--gutter-10), 'color': inherit);
+
+    @if $icon == true {
+      $icon: $i-default-params;
+    }
+
+    $i-margin: if(map.get($icon, 'margin'), map.get($icon, 'margin'), map.get($i-default-params, 'margin'));
+    $i-size: if(map.get($icon, 'size'), map.get($icon, 'size'), map.get($i-default-params, 'size'));
+    $i-color: if(map.get($icon, 'color'), map.get($icon, 'color'), map.get($i-default-params, 'color'));
+    $i-top: map.get($icon, 'top');
+    $delta: calc($i-size + $i-margin);
+
+    &.i {
+      &-a11y {
+        background-position-x: calc($x + $delta);
+      }
+
+      &-after {
+        background-position-x: $x;
+        background-size: if($on-hover, 0, calc($bg-width - $delta)) $height;
+
+        @if $from == right {
+          background-position-x: calc($x - $delta);
+        }
+
+        @if $from == center {
+          background-position-x: calc($x - ($delta / 2));
+        }
+
+        &:hover,
+        &:focus {
+          background-size: if($on-hover, calc($bg-width - $delta), 0) $height;
+        }
+      }
+
+      &-both {
+        background-size: if($on-hover, 0, calc($bg-width - ($delta * 2))) $height;
+
+        @if $from == right {
+          background-position-x: calc($x - $delta);
+        }
+
+        @if $from == center {
+          background-position-x: $x;
+        }
+
+        &:hover,
+        &:focus {
+          background-size: if($on-hover, calc($bg-width - ($delta * 2)), 0) $height;
+        }
+      }
+
+      &-inline {
+        .i-content {
+          margin-right: $i-margin;
+        }
+
+        &.i-after,
+        &.i-both {
+          .i-content:last-of-type {
+            margin-left: $i-margin;
+            margin-right: initial;
+          }
+        }
+      }
+    }
+
+    .i-content {
+      font-size: $i-size;
+      color: $i-color;
+
+      @if $i-top {
+        @include relative(top $i-top);
+      }
+    }
+  }
+}

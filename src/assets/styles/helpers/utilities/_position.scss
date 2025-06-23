@@ -1,0 +1,110 @@
+////
+/// @file
+/// Project utilities for positions.
+////
+@use 'sass:list';
+@use '@function' as *;
+
+/// Helper mixin for offset positioning
+/// @param {string} $position - The position.
+/// @param {list}   $args()   - offsets list & corresponding values
+/// About: https://kittygiraudel.com/2014/05/19/a-new-sass-mixin-for-offsets/
+@mixin position($position, $args: ()) {
+  $offsets: top right bottom left;
+  position: $position;
+
+  @each $offset in $offsets {
+    $index: list.index($args, $offset);
+
+    @if $index {
+      @if $index == list.length($args) {
+        #{$offset}: 0;
+      } @else {
+        $next: list.nth($args, $index + 1);
+
+        @if is-valid-length($next) {
+          #{$offset}: $next;
+        } @else if list.index($offsets, $next) {
+          #{$offset}: 0;
+        } @else {
+          @warn 'Invalid value `#{$next}` for offset `#{$offset}`.';
+        }
+      }
+    }
+  }
+}
+
+/// Shorthands for positioning
+/// @param {list} $args() - offsets list & corresponding values
+/// @example
+///    @include fixed;
+/// @CSS
+///    position: fixed;
+@mixin fixed($args: ()) {
+  @include position(fixed, $args);
+
+  @media print {
+    position: static;
+  }
+}
+
+/// @example
+///    @include relative(top 10px left -10px);
+/// @CSS
+///    position: relative;
+///    top: 10px;
+///    left: -10px;
+@mixin relative($args: ()) {
+  @include position(relative, $args);
+}
+
+/// @example
+///    @include absolute(right bottom);
+/// @CSS
+///    position: absolute;
+///    right: 0;
+///    bottom: 0;
+@mixin absolute($args: ()) {
+  @include position(absolute, $args);
+}
+
+/// @param {string} $axis       - defines the axis on which the element is centered
+/// @param {string} $transform  - values that are added to the transform property
+/// @example
+///    @include center-transform(y, rotate(-90deg));
+@mixin center-transform($axis: xy, $transform: '') {
+  $translate: '';
+
+  @if $axis == x {
+    $translate: translateX(-50%);
+  } @else if $axis == y {
+    $translate: translateY(-50%);
+  } @else if $axis == xy {
+    $translate: translate(-50%, -50%);
+  } @else {
+    @warn '`#{$axis}` is not valid value for axis.';
+  }
+
+  transform: #{$translate} #{$transform};
+}
+
+/// @param {string} $axis       - defines the axis on which the element is centered
+/// @param {string} $transform  - values that are added to the transform property
+/// @example
+///    @include center(y, rotate(90deg));
+@mixin center($axis: xy, $transform: '') {
+  position: absolute;
+
+  @if $axis == x {
+    left: 50%;
+  } @else if $axis == y {
+    top: 50%;
+  } @else if $axis == xy {
+    left: 50%;
+    top: 50%;
+  } @else {
+    @warn '`#{$axis}` is not valid value for axis.';
+  }
+
+  @include center-transform($axis, $transform);
+}

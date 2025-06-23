@@ -1,32 +1,74 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import Slideshow from './components/Slideshow.vue'
+<script lang="ts" setup>
+import ThePreview from './components/preview/ThePreview.vue'
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-  <Slideshow />
+  <header class="header" role="banner">
+    <div class="layout-wrapper">
+      <div class="header-content header-wrapper">
+        <div class="header-wrapper">
+          <img
+            alt="ecedi logo"
+            class="logo"
+            height="125"
+            src="@/assets/images/logo.svg"
+            width="125"
+          />
+          <img
+            alt=""
+            class="logo icon"
+            height="512"
+            src="@/assets/images/components.png"
+            width="512"
+          />
+
+          <h1>Components library</h1>
+        </div>
+
+        <nav role="navigation">
+          <ul class="header-nav header-wrapper">
+            <li><a href="#global">Global</a></li>
+            <li><a href="#specific">Specific</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout-wrapper" role="main">
+    <ThePreview />
+  </main>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+.header {
+  padding-block: 2rem;
+
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--gutter-20);
+  }
+
+  &-content {
+    justify-content: space-between;
+  }
+
+  a {
+    @include cta-highlighting;
+  }
+}
+
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  width: 80px;
+  height: auto;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.icon {
+  margin-left: -40px;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+h1 {
+  font-size: 28px;
 }
 </style>

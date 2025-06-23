@@ -1,0 +1,36 @@
+////
+/// @file
+/// Project color variables.
+////
+@use 'sass:list';
+@use '@helpers' as *;
+
+$gutter-base: (0.8, 1);
+$gutter-set: ();
+
+@for $i from 1 through 10 {
+  @each $base in $gutter-base {
+    $gutter: calc($base * $i);
+
+    @if not list.index($gutter-set, $gutter) {
+      @if list.length($gutter-set) > 0 {
+        @if $gutter < get-last($gutter-set) {
+          $gutter-set: insert-nth($gutter-set, list.length($gutter-set), $gutter);
+        } @else {
+          $gutter-set: list.append($gutter-set, $gutter);
+        }
+      } @else {
+        $gutter-set: list.append($gutter-set, $gutter);
+      }
+    }
+  }
+}
+
+:root {
+  @each $gutter in $gutter-set {
+    $gutter-name: calc($gutter * 10);
+    $gutter-size: calc($gutter * 1rem);
+
+    --gutter-#{$gutter-name}: #{$gutter-size};
+  }
+}

@@ -1,4 +1,4 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>
 
 <template>
   <div class="preview-item">
@@ -12,18 +12,22 @@
   </div>
 </template>
 
-<style scoped>
-.preview-item-title {
-  font-size: 25px;
-  line-height: 1;
-  padding-left: var(--gutter-10);
-  color: var(--c-tertiary);
-  border-left: 18px solid;
-}
+<style lang="scss" scoped>
+.preview-item {
+  &-title {
+    @include relative(top 2.1rem left 3rem);
+    font-size: var(--fs-h2);
+    line-height: 1;
+    padding: var(--gutter-10);
+    color: var(--c-secondary);
+    background-color: var(--c-white);
+  }
 
-.preview-item-content {
-  margin-left: 8px;
-  padding: var(--gutter-20) var(--gutter-20);
-  border-left: 2px solid var(--c-tertiary);
+  &-content {
+    margin-left: var(--gutter-10);
+    padding: var(--gutter-30) var(--gutter-30) var(--gutter-20);
+    border: solid var(--c-primary);
+    border-width: 2px 0 0 2px;
+  }
 }
 </style>

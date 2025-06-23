@@ -1,0 +1,174 @@
+////
+/// @file
+/// Project Helper functions.
+////
+
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+
+/// Usage : Replace `$search` with `$replace` in `$string`
+/// @param {String} $string - Initial string
+/// @param {String} $search - Substring to replace
+/// @param {String} $replace ('') - New value
+/// @return {String} - Updated string
+@function str-replace($string, $search, $replace: '') {
+  $index: string.index($string, $search);
+
+  @if $index {
+    @return string.slice($string, 1, $index - 1) + $replace + str-replace(string.slice($string,
+    $index + string.length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+/// Usage : Transform px into em for media-queries (based on browser font-size, which is usually 16px and we don't have
+// access to)
+/// @param {String} $px - Size, in pixels
+/// @return {String} $em - Calculated size in em
+/// @example
+///   @media (min-width: px-to-em(1000px)) {
+///     ...
+///   }
+/// will be transformed in :
+///   @media (min-width: 62.5em) {
+///     ...
+///   }
+/// @see https://css-tricks.com/snippets/sass/px-to-em-functions/
+$browser-context: 16px;
+
+@function px-to-em($px, $context: $browser-context) {
+  $em: math.div($px, $context) * 1em;
+
+  @return $em;
+}
+
+/// Usage : Generate a map of breakpoints for media queries
+/// @param {Map} $screens
+/// @example
+///   $map : (
+///     xs: 520px,
+///     small: 720px,
+///   )
+/// @return {Map} $breakpoints
+/// @example
+///   $breakpoints : (
+///     'xs up': '(min-width: 32.5625em)',
+///     'small to large': '(min-width: 45.0625em) and (max-width: 90em)',
+///   )
+@function get-breakpoints($screens) {
+  $breakpoints: ();
+  $last: list.length($screens);
+
+  @each $screen, $size in $screens {
+    // Get size for min and max width
+    $screen-size: px-to-em($size);
+    $screen-size-up: px-to-em($size + 1);
+
+    // Add each size to breakpoints list
+    $breakpoints: map.set($breakpoints, '#{$screen}', '(max-width: #{$screen-size})');
+    $breakpoints: map.set($breakpoints, '#{$screen} up', '(min-width: #{$screen-size-up})');
+
+    // Get current index
+    $index: list.index($screens, $screen $size);
+
+    @if $index < $last {
+      $next-id: $index + 1;
+
+      // For each next index add new interval
+      // 'from to': '(min-width) and (max-width)'
+      @for $i from $next-id through $last {
+        $next: list.nth($screens, $i);
+
+        @each $value in $next {
+          $next-screen: null;
+          $next-size: null;
+
+          @if map.has-key($screens, $value) {
+            $next-screen: $value;
+            $next-size: px-to-em(map.get($screens, $value));
+          }
+
+          @if $next-screen {
+            $key: '#{$screen} to #{$next-screen}';
+            $value: '(min-width: #{$screen-size-up}) and (max-width: #{$next-size})';
+            $breakpoints: map.set($breakpoints, $key, $value);
+          }
+        }
+      }
+    }
+  }
+
+  @return $breakpoints;
+}
+
+/// Usage : Check if it is a valid length for an offset property (top, right, etc..)
+/// First check if it’s a number with a unit. If it is not, check whether it is an allowed value. If it is not again,
+// then it is not a valid length.
+/// Should be considered as a valid length:
+///  - a number with a unit
+///  - 0
+///  - auto
+///  - initial
+///  - inherit
+/// @param {whatever} $value - Something to check
+@function is-valid-length($value) {
+  @if meta.type-of($value) != 'null' {
+    @return list.index(auto inherit initial 0, $value)
+    or string.slice($value + '', 1, 3) == 'var'
+    or (meta.type-of($value) == 'number' and list.index(px rem em '%', math.unit($value)));
+  } @else {
+    @warn '`#{$value}` is not defined.';
+  }
+}
+
+/// Usage : Reduce breakpoint key name in order to have a smaller class name
+/// @param {string} $breakpoint - breakpoint key name.
+/// @example
+///   reduce-breakpoint-name('small up');
+/// Examples of returned string :
+/// small -> sm
+/// small up -> sm-up
+/// small to medium -> sm-md
+@function reduce-breakpoint-name($breakpoint) {
+  $breakpoint-name: str-replace($breakpoint, ' ', '-');
+  $breakpoint-name: str-replace($breakpoint-name, 'small', 'sm');
+  $breakpoint-name: str-replace($breakpoint-name, 'medium', 'md');
+  $breakpoint-name: str-replace($breakpoint-name, 'large', 'lg');
+  $breakpoint-name: str-replace($breakpoint-name, 'to-', '');
+
+  @return $breakpoint-name;
+}
+
+/// Usage : Return last element of a list
+@function get-last($list) {
+  @return list.nth($list, list.length($list));
+}
+
+/// Usage : Insert value in list at specific position
+@function insert-nth($list, $index, $value) {
+  $result: null;
+
+  @if meta.type-of($index) != number {
+    @warn '$index: #{quote($index)} is not a number for `insert-nth`.';
+  } @else if $index < 1 {
+    @warn 'List index 0 must be a non-zero integer for `insert-nth`.';
+  } @else if $index > list.length($list) {
+    @warn 'List index is #{$index} but list is only #{length($list)} item long for `insert-nth`.';
+  } @else {
+    $result: ();
+
+    @for $i from 1 through list.length($list) {
+      @if $i == $index {
+        $result: list.append($result, $value);
+      }
+
+      $result: list.append($result, list.nth($list, $i));
+    }
+  }
+
+  @return $result;
+}

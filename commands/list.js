@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { loadComponents } from '../utils/component-checker.js';
+import { loadComponents } from '#utils/component-checker.js';
 
 const components = loadComponents();
 

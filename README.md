@@ -12,6 +12,27 @@ npm install @dazdav/components-library
 
 Le CLI permet de gérer les composants dans votre projet Vue.js ou Nuxt.js.
 
+### Installer les assets
+
+Cette commande installe le dossier assets et ses dépendances dans votre projet.
+
+```bash
+npx @dazdav/components-library install-assets
+```
+
+Les fichiers seront copiés :
+- Dans `./src/assets` pour un projet Vue.js
+- Dans `./assets` pour un projet Nuxt.js
+
+Les dépendances suivantes seront installées :
+- postcss-html
+- postcss-scss
+- sass
+- sass-loader
+- stylelint
+- stylelint-config-recommended-scss
+- stylelint-config-recommended-vue
+
 ### Commandes disponibles
 
 #### Lister les composants disponibles

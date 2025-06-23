@@ -1,0 +1,29 @@
+////
+/// @file
+/// Project utilities for responsive behaviors.
+////
+@use 'sass:map';
+@use '@var' as *;
+@use '@function' as *;
+
+// Get breakpoints for media queries.
+$breakpoints: get-breakpoints($screens);
+
+@mixin respond-to($screen, $additional: '') {
+  $media: map.get($breakpoints, $screen);
+
+  @if $media {
+    @if $additional != '' {
+      @media screen and #{$media}, #{$additional} {
+        @content;
+      }
+    } @else {
+      @media screen and #{$media} {
+        @content;
+      }
+    }
+  } @else {
+    @error 'No "#{$screen}" breakpoint found in $breakpoint';
+  }
+}
+

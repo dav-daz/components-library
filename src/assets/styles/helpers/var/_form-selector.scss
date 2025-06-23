@@ -1,0 +1,46 @@
+////
+/// @file
+/// Project form selector variables.
+////
+
+@use 'sass:list';
+@use 'sass:string';
+
+/// A list of all input types.
+$input-types: 'input[type="text"]',
+'input[type="email"]',
+'input[type="password"]',
+'input[type="search"]',
+'input[type="url"]',
+'input[type="tel"]',
+'input[type="number"]',
+'input[type="date"]',
+'input[type="time"]',
+'input[type="file"]',
+'textarea',
+'select';
+
+// Generate list of CSS selectors (remove quotes & add comma).
+$inputs-unquoted: ();
+
+@each $type in $input-types {
+  $inputs-unquoted: list.append($inputs-unquoted, string.unquote($type), comma);
+}
+
+$inputs: $inputs-unquoted;
+
+/// A list of all button types.
+$button-types: 'button',
+'input[type="button"]',
+'input[type="submit"]',
+'input[type="reset"]',
+'input[type="file"] > input[type="button"]';
+
+// Generate list of CSS selectors (remove quotes & add comma).
+$buttons-unquoted: ();
+
+@each $type in $button-types {
+  $buttons-unquoted: list.append($buttons-unquoted, string.unquote($type), comma);
+}
+
+$buttons: $buttons-unquoted;

@@ -1,0 +1,78 @@
+////
+/// @file
+/// Project utilities for call to action (buttons & links).
+////
+@use '@var' as *;
+
+%reset-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+%reset-btn {
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  text-align: inherit;
+  white-space: normal;
+  box-shadow: none;
+}
+
+%btn {
+  display: inline-block;
+  padding: 0.75em;
+  border: 1px solid;
+  text-decoration: none;
+  transition: $t-color;
+}
+
+%all-click {
+  position: relative;
+
+  a::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+}
+
+@mixin btn-color($bg: var(--c-primary), $color: var(--c-white), $border: var(--c-primary)) {
+  background-color: $bg;
+  color: $color;
+
+  @if $border {
+    border-color: $border;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $color;
+    color: $bg;
+
+    @if $border {
+      border-color: $bg;
+    }
+
+    @content;
+  }
+}
+
+@mixin cta-highlighting($bg: var(--bg-highlighting), $color: var(--c-secondary)) {
+  padding: 0.2rem 0.6rem;
+  color: $color;
+  border-radius: 4px;
+
+  &:focus,
+  &:hover {
+    background-color: $bg;
+  }
+}

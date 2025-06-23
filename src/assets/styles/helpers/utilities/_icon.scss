@@ -1,0 +1,27 @@
+////
+/// @file
+/// Project utilities for icons.
+////
+@use '@var' as *;
+
+%icon {
+  display: block;
+  font-family: 'icomoon', fantasy;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  speak: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin icon($icon, $size: 1em, $pseudo-element: before) {
+  &::#{$pseudo-element} {
+    @extend %icon;
+    content: $icon;
+    font-size: $size;
+
+    @content;
+  }
+}
