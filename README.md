@@ -101,8 +101,16 @@ Pour installer un composant dans un autre dossier, utilisez l'option `--path`.
 
 - **Slideshow** : Un carrousel basé sur Swiper.js
   - Dépendances : swiper
-- **HelloWorld** : Un composant de démonstration
+  
+- **DummyComponent** : Un composant d’exemple simple  
   - Dépendances : aucune
+
+- **IconA11y** : Icône accessible pour l’accessibilité  
+  - Dépendances : aucune
+
+- **VQuote** : Bloc de citation avec auteur et image  
+  - Dépendances : aucune  
+  - Composants requis : IconA11y
 
 ## Note importante
 

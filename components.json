@@ -3,18 +3,19 @@
     "path": "./src/components/Slideshow.vue",
     "dependencies": ["swiper"]
   },
-  "HelloWorld": {
-    "path": "./src/components/HelloWorld.vue",
-    "dependencies": []
-  },
   "DummyComponent": {
     "path": "./src/components/DummyComponent.vue",
     "dependencies": [],
-    "required_components": ["HelloWorld"]
+    "required_components": []
   },
-  "preview": {
-    "path": "./src/components/preview",
-    "dependencies": ["swiper"],
-    "required_components": ["HelloWorld"]
+  "IconA11y": {
+    "path": "./src/components/IconA11y.vue",
+    "dependencies": [],
+    "required_components": []
+  },
+  "VQuote": {
+    "path": "./src/components/VQuote.vue",
+    "dependencies": [],
+    "required_components": ["IconA11y"]
   }
 }
